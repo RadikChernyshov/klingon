@@ -2,7 +2,6 @@ package recognizer
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/RadikChernyshov/klingon/pkg/recognizer/rest"
 	"strings"
@@ -36,14 +35,14 @@ type CharacterSpecies struct {
 
 func getCharacter(name string) (c Character, err error) {
 	var r Characters
-	p := strings.NewReader(fmt.Sprintf("title=%s&name=%s", name, name))
+	p := strings.NewReader(fmt.Sprintf("name=%s", name))
 	res, err := rest.PostReq("/character/search", p)
 	if err != nil {
 		return c, err
 	}
 	_ = json.Unmarshal(res, &r)
-	if len(r.Characters) == 0 || strings.ToLower(name) != strings.ToLower(r.Characters[0].Name) {
-		err = errors.New(fmt.Sprintf("character `%s` not found", name))
+	if len(r.Characters) == 0 || !strings.Contains(strings.ToLower(r.Characters[0].Name), strings.ToLower(name)) {
+		err = fmt.Errorf("character `%s` not found", name)
 	} else {
 		c = r.Characters[0]
 	}
@@ -58,7 +57,7 @@ func getCharacterSpecie(c Character) (s string, err error) {
 	var r CharacterSpecies
 	_ = json.Unmarshal(res, &r)
 	if len(r.Character.CharacterSpecies) == 0 {
-		err = errors.New(fmt.Sprintf("character `%s` species not found", c.Name))
+		err = fmt.Errorf("characters `%s` species not found", c.Name)
 	} else {
 		s = r.Character.CharacterSpecies[0].Name
 	}

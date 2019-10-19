@@ -39,7 +39,7 @@ func (t *Transliterator) ToKlingon() (err error) {
 		if code, exists := dict[curChar]; exists {
 			charsEncoded = append(charsEncoded, code)
 		} else {
-			return errors.New(fmt.Sprintf("%s character is not translatable", curChar))
+			return fmt.Errorf("%s character is not translatable", curChar)
 		}
 		charIndex++
 		if charIndex >= charsLen {
