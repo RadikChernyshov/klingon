@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const apiUrl = "http://stapi.co/api/v1/ret"
+const apiUrl = "http://stapi.co/api/v1/rest"
 const StatusCodeOk = 200
 
 func PostReq(uri string, payload *strings.Reader) (body []byte, err error) {
